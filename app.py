@@ -27,6 +27,11 @@ def run_rebound_server(x, vy):
     while True:
         sim.integrate(sim.t + 0.05)
 
+        # If the particle is 100 units away, it's 'ejected' - stop the loop
+        if sim.particles[2].x > 100 or sim.particles[2].y > 100:
+            print("Particle ejected! Stopping.")
+            break
+
 @app.route('/')
 def index():
     return render_template('index.html')

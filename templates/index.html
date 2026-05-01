@@ -1,31 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>REBOUND Live Viz</title>
+    <title>Three-Body Dashboard</title>
     <style>
-        body { font-family: sans-serif; display: flex; height: 100vh; margin: 0; }
-        #sidebar { width: 300px; padding: 20px; background: #222; color: white; }
-        #viz-container { flex-grow: 1; background: #000; }
-        iframe { width: 100%; height: 100%; border: none; }
-        input { width: 90%; padding: 8px; margin-bottom: 20px; }
-        button { width: 100%; padding: 10px; cursor: pointer; }
+        /* This layout creates the "One Site" feel */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; height: 100vh; margin: 0; background: #111; color: white; }
+        
+        #sidebar { width: 320px; padding: 30px; background: #222; border-right: 1px solid #444; box-shadow: 2px 0 10px rgba(0,0,0,0.5); z-index: 10; }
+        
+        #viz-container { flex-grow: 1; position: relative; overflow: hidden; }
+        
+        /* The "Window" into REBOUND */
+        iframe { width: 100%; height: 100%; border: none; background: black; }
+
+        h2 { color: #00d4ff; margin-top: 0; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.9em; color: #aaa; }
+        input { width: 100%; padding: 10px; background: #333; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #00d4ff; border: none; color: #000; font-weight: bold; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0099ff; }
     </style>
 </head>
 <body>
 
 <div id="sidebar">
-    <h2>Controls</h2>
-    <label>Start X:</label><br>
-    <input type="number" id="x" value="0.5" step="0.1">
+    <h2>REBOUND Sim</h2>
+    <p>Adjust initial conditions for the restricted test particle.</p>
     
-    <label>Start Vy:</label><br>
-    <input type="number" id="vy" value="0.5" step="0.1">
+    <div class="input-group">
+        <label>Initial X Position</label>
+        <input type="number" id="x" value="0.8" step="0.1">
+    </div>
     
-    <button onclick="startSim()">Launch Simulation</button>
+    <div class="input-group">
+        <label>Initial Vy Velocity</label>
+        <input type="number" id="vy" value="0.5" step="0.1">
+    </div>
+    
+    <button onclick="startSim()">Launch Orbit</button>
 </div>
 
 <div id="viz-container">
-    <iframe id="rebound-frame" src=""></iframe>
+    <iframe id="rebound-frame" src="about:blank"></iframe>
 </div>
 
 <script>
@@ -33,14 +49,16 @@
         const x = document.getElementById('x').value;
         const vy = document.getElementById('vy').value;
 
+        // Tell Flask to start the math
         fetch('/update_sim', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({x: x, vy: vy})
+            body: JSON.stringify({x: parseFloat(x), vy: parseFloat(vy)})
         }).then(() => {
-            // Give the server a second to start, then refresh the iframe
+            // Wait 1 second for the REBOUND server to initialize, 
+            // then point the iframe to it.
             setTimeout(() => {
-                document.getElementById('rebound-frame').src = "http://localhost:5500";
+                document.getElementById('rebound-frame').src = "http://127.0.0.1:1234";
             }, 1000);
         });
     }
