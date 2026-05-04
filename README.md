@@ -5,4 +5,5 @@ This project uses a restricted three body problem that allows the user to put an
 
 Challenge: 
 
+- the python script overrides the REBOUND feature to pause the simulation with line 40. fix: get rid of while loop and let rebound handle the simulation completely. 
 - 

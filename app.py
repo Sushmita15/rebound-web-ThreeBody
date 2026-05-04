@@ -5,7 +5,7 @@ import threading #, which allows your program to run multiple operations concurr
 app = Flask(__name__, template_folder='templates')
 
 # Global variable to hold our simulation
-sim = None
+#sim = None
 
 def run_rebound_server(x, vy):
     global sim
@@ -36,14 +36,22 @@ def run_rebound_server(x, vy):
     sim.start_server(port=1234) 
     
     # Keep the simulation running
-    while True:
-        sim.integrate(sim.t + 0.05)
+    #while True:
+   #     sim.integrate(sim.t + 0.05)
 
         # If the particle is 100 units away, it's 'ejected' - stop the loop
-        if sim.particles[2].x > 100 or sim.particles[2].y > 100:
-            print("Particle ejected! Stopping.")
-            break
+       # if sim.particles[2].x > 100 or sim.particles[2].y > 100:
+       #     print("Particle ejected! Stopping.")
+      #      break
 
+def check_ejection(sim):
+    p = sim.particles[2]
+    if abs(p.x) > 100 or abs(p.y) > 100:
+        print("Particle ejected!")
+        sim.stop()
+
+sim.heartbeat = check_ejection
+sim.start_server(port=1234)
 
 @app.route('/')
 def index():
