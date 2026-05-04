@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 import rebound
-import threading
+import threading #, which allows your program to run multiple operations concurrently within a single process.
 
 app = Flask(__name__, template_folder='templates')
 
@@ -43,6 +43,7 @@ def run_rebound_server(x, vy):
         if sim.particles[2].x > 100 or sim.particles[2].y > 100:
             print("Particle ejected! Stopping.")
             break
+
 
 @app.route('/')
 def index():

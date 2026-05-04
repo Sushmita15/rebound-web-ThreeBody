@@ -98,6 +98,7 @@
 
     <script>
       function startSim() {
+        // Get user inputs
         const x = document.getElementById("x").value;
         const vy = document.getElementById("vy").value;
 
@@ -105,7 +106,8 @@
         fetch("/update_sim", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ x: parseFloat(x), vy: parseFloat(vy) }),
+          //use parsefloat to convert the string inputs to numbers before sending to the browser
+          body: JSON.stringify({ x: parseFloat(x), vy: parseFloat(vy)}),
         }).then(() => {
           // Wait 1 second for the REBOUND server to initialize,
           // then point the iframe to it.
