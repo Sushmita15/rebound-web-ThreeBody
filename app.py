@@ -18,16 +18,16 @@ def run_rebound_server(x, vy):
     
     # Standard Restricted Three-Body Setup
     # Primary (Sun) - Make it huge
-    sim.add(m=1.0, r=1.0, hash="Sun")
-    sim.particles["Sun"].color = (1, 0.8, 0) # Use 0-1 scale instead of 0-255
+    sim.add(m=1.0, r=0.5, hash="Sun")
+    #sim.particles["Sun"].color = (1, 0.8, 0) # Use 0-1 scale instead of 0-255
 
     # Secondary (Planet) - Make it visible
-    sim.add(m=0.01, a=1.0, r=0.05, hash="Planet")
-    sim.particles["Planet"].color = (0, 0.5, 1)
+    sim.add(m=0.01, a=1.0, r=0.3, hash="Planet")
+   # sim.particles["Planet"].color = (0, 0.5, 1)
 
     # Test Particle - Make it distinct
-    sim.add(m=0, x=x, vy=vy, r=0.02, hash="Particle")
-    sim.particles["Particle"].color = (1, 0, 0)
+    sim.add(m=0, x=x, vy=vy, r=0.1, hash="Particle")
+    #sim.particles["Particle"].color = (1, 0, 0)
     
     sim.move_to_com()
     
