@@ -1,68 +1,120 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Three-Body Dashboard</title>
     <style>
-        /* This layout creates the "One Site" feel */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; height: 100vh; margin: 0; background: #111; color: white; }
-        
-        #sidebar { width: 320px; padding: 30px; background: #222; border-right: 1px solid #444; box-shadow: 2px 0 10px rgba(0,0,0,0.5); z-index: 10; }
-        
-        #viz-container { flex-grow: 1; position: relative; overflow: hidden; }
-        
-        /* The "Window" into REBOUND */
-        iframe { width: 100%; height: 100%; border: none; background: black; }
+      /* This layout creates the "One Site" feel */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        height: 100vh;
+        margin: 0;
+        background: #111;
+        color: white;
+      }
 
-        h2 { color: #00d4ff; margin-top: 0; }
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 5px; font-size: 0.9em; color: #aaa; }
-        input { width: 100%; padding: 10px; background: #333; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #00d4ff; border: none; color: #000; font-weight: bold; border-radius: 4px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #0099ff; }
+      #sidebar {
+        width: 320px;
+        padding: 30px;
+        background: #222;
+        border-right: 1px solid #444;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+        z-index: 10;
+      }
+
+      #viz-container {
+        flex-grow: 1;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* The "Window" into REBOUND */
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: black;
+      }
+
+      h2 {
+        color: #00d4ff;
+        margin-top: 0;
+      }
+      .input-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+        color: #aaa;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        background: #333;
+        border: 1px solid #555;
+        color: white;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #00d4ff;
+        border: none;
+        color: #000;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      button:hover {
+        background: #0099ff;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div id="sidebar">
+      <h2>REBOUND Sim</h2>
+      <p>Adjust initial conditions for the restricted test particle.</p>
 
-<div id="sidebar">
-    <h2>REBOUND Sim</h2>
-    <p>Adjust initial conditions for the restricted test particle.</p>
-    
-    <div class="input-group">
+      <div class="input-group">
         <label>Initial X Position</label>
-        <input type="number" id="x" value="0.8" step="0.1">
-    </div>
-    
-    <div class="input-group">
+        <input type="number" id="x" value="0.8" step="0.1" />
+      </div>
+
+      <div class="input-group">
         <label>Initial Vy Velocity</label>
-        <input type="number" id="vy" value="0.5" step="0.1">
+        <input type="number" id="vy" value="0.5" step="0.1" />
+      </div>
+
+      <button onclick="startSim()">Launch Orbit</button>
     </div>
-    
-    <button onclick="startSim()">Launch Orbit</button>
-</div>
 
-<div id="viz-container">
-    <iframe id="rebound-frame" src="about:blank"></iframe>
-</div>
+    <div id="viz-container">
+      <iframe id="rebound-frame" src="about:blank"></iframe>
+    </div>
 
-<script>
-    function startSim() {
-        const x = document.getElementById('x').value;
-        const vy = document.getElementById('vy').value;
+    <script>
+      function startSim() {
+        const x = document.getElementById("x").value;
+        const vy = document.getElementById("vy").value;
 
         // Tell Flask to start the math
-        fetch('/update_sim', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({x: parseFloat(x), vy: parseFloat(vy)})
+        fetch("/update_sim", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ x: parseFloat(x), vy: parseFloat(vy) }),
         }).then(() => {
-            // Wait 1 second for the REBOUND server to initialize, 
-            // then point the iframe to it.
-            setTimeout(() => {
-                document.getElementById('rebound-frame').src = "http://127.0.0.1:1234";
-            }, 1000);
+          // Wait 1 second for the REBOUND server to initialize,
+          // then point the iframe to it.
+          setTimeout(() => {
+            document.getElementById("rebound-frame").src =
+              "http://127.0.0.1:1234";
+          }, 1000);
         });
-    }
-</script>
-
-</body>
+      }
+    </script>
+  </body>
 </html>
