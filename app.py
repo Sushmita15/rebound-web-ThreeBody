@@ -1,14 +1,17 @@
 from flask import Flask, render_template, request
 import rebound
 import threading #, which allows your program to run multiple operations concurrently within a single process.
+import time
 
 app = Flask(__name__, template_folder='templates')
 
 # Global variable to hold our simulation
-#sim = None
+sim = None
 
 def run_rebound_server(x, vy):
     global sim
+    print("Thread started")
+
 
     if sim is not None:
         sim.stop_server()
@@ -18,6 +21,7 @@ def run_rebound_server(x, vy):
     
     # Standard Restricted Three-Body Setup
     # Primary (Sun) - Make it huge
+    print("-----------Adding particles-----------")
     sim.add(m=1.0, r=0.5, hash="Sun")
     #sim.particles["Sun"].color = (1, 0.8, 0) # Use 0-1 scale instead of 0-255
 
@@ -30,10 +34,11 @@ def run_rebound_server(x, vy):
     #sim.particles["Particle"].color = (1, 0, 0)
     
     sim.move_to_com()
+    print("--------------Starting REBOUND server--------------")
     
     # This starts the visualization server on port 1234
     # 'pause=False' ensures it starts moving immediately
-    sim.start_server(port=1234) 
+    #sim.start_server(port=1234) 
     
     # Keep the simulation running
     #while True:
@@ -44,14 +49,20 @@ def run_rebound_server(x, vy):
        #     print("Particle ejected! Stopping.")
       #      break
 
-def check_ejection(sim):
-    p = sim.particles[2]
-    if abs(p.x) > 100 or abs(p.y) > 100:
-        print("Particle ejected!")
-        sim.stop()
+    def check_ejection(sim):
+        p = sim.particles[2]
+        if abs(p.x) > 100 or abs(p.y) > 100:
+            print("Particle ejected!")
+            sim.stop()
 
-sim.heartbeat = check_ejection
-sim.start_server(port=1234)
+    sim.heartbeat = check_ejection
+    print("--------------Server is running--------------")
+    sim.start_server(port=1234)
+    print("✅ Server running at http://127.0.0.1:1234")
+
+    # ✅ KEEP THREAD ALIVE (CRITICAL)
+    while True:
+        time.sleep(1)
 
 @app.route('/')
 def index():
@@ -59,6 +70,7 @@ def index():
 
 @app.route('/update_sim', methods=['POST'])
 def update_sim():
+    print("🔥 /update_sim HIT")
     data = request.json
     x = float(data.get('x'))
     vy = float(data.get('vy'))
