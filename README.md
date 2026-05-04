@@ -38,6 +38,6 @@ Rules:
 Notes: 
 I ran the following command: 
 ```
-sushmitamandal@Sushmitas-MacBook-Pro rebound-web-ThreeBody % curl -X POST http://127.0.0.1:5001/update_sim \ -H "Content-Type: application/json" \ -d '{"x":0.8, "vy":0.5}'
+curl -X POST http://127.0.0.1:5001/update_sim \ -H "Content-Type: application/json" \ -d '{"x":0.8, "vy":0.5}'
 ```
 - It showed me that the backend was running just fine. 
