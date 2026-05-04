@@ -3,6 +3,8 @@ Name: Sushmita Mandal
 This project uses a restricted three body problem that allows the user to put an onject with negligible mass near two bodies with gravitational force. 
 **REBOUND** API by Hanno Rein is used to create a simulation. 
 
+
+
 Directions:
 1. Prerequisites: 
 Ensure you have Python 3.10+ installed. You will need the following libraries:REBOUND: The orbital mechanics engine.Flask: The web framework for the UI.Install them via terminal:Bashpip install rebound flask

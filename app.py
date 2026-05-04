@@ -35,7 +35,7 @@ def run_sim():
         
         time.sleep(0.01)
         print("t =", sim.t, "Particle 2 position:", sim.particles[2].x, sim.particles[2].y)
-        if sim.particles[2].x > 10 or sim.particles[2].y > 10:
+        if sim.particles[2].x > 10 or sim.particles[2].y > 10 or sim.t > 300:
             print("Particle ejected! Stopping.")
             break
 
@@ -45,10 +45,6 @@ threading.Thread(target=run_sim, daemon=True).start()
 # -------------------------
 # FLASK
 # -------------------------
-
-@app.route('/status')
-def status():
-    return {"ejected": ejected}
 
 
 @app.route('/')
