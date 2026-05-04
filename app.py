@@ -9,12 +9,12 @@ app = Flask(__name__, template_folder='templates')
 sim = None
 
 def run_rebound_server(x, vy):
-    global sim
-    print("Thread started")
+ #   global sim
+ #   print("Thread started")
 
 
-    if sim is not None:
-        sim.stop_server()
+  #  if sim is not None:
+   #     sim.stop_server()
 
     sim = rebound.Simulation()
     sim.integrator = "ias15"
@@ -35,6 +35,10 @@ def run_rebound_server(x, vy):
     
     sim.move_to_com()
     print("--------------Starting REBOUND server--------------")
+
+    print("--------------Server is running--------------")
+    sim.start_server(port=1234)
+    print("✅ Server running at http://127.0.0.1:1234")
     
     # This starts the visualization server on port 1234
     # 'pause=False' ensures it starts moving immediately
@@ -56,9 +60,7 @@ def run_rebound_server(x, vy):
             sim.stop()
 
     sim.heartbeat = check_ejection
-    print("--------------Server is running--------------")
-    sim.start_server(port=1234)
-    print("✅ Server running at http://127.0.0.1:1234")
+    
 
     # ✅ KEEP THREAD ALIVE (CRITICAL)
     while True:
