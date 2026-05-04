@@ -9,7 +9,12 @@ Directions:
 1. Prerequisites: 
 Ensure you have Python 3.10+ installed. You will need the following libraries:REBOUND: The orbital mechanics engine.Flask: The web framework for the UI.Install them via terminal:Bashpip install rebound flask
 2. Project Structure
-app.py: The main Flask application and background physics thread.templates/index.html: The user interface for entering $x$ and $v_y$.physics_failures.db: (Optional) The SQLite database where ejections are logged.3. How to RunStart the Server:Navigate to your project folder and run the Flask app:Bashpython3 app.py
+app.py: The main Flask application and background physics thread.templates/index.html: The user interface for entering $x$ and $v_y$.physics_failures.db: 
+ How to Run:
+ Start the Server:Navigate to your project folder and run the Flask app:Bash
+ ```
+ python3 app.py
+```
 Open the Visualization:REBOUND starts a native visualizer. Open your browser to:http://localhost:1234
 
 Open the Control Panel:In a new tab, open the Flask UI:http://127.0.0.1:5001/. Using the SimulatorEnter a starting X-coordinate (e.g., 0.8) and a Y-velocity (e.g., 1.5).Click Update Simulation.
