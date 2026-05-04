@@ -1,70 +1,22 @@
 from flask import Flask, render_template, request
 import rebound
-import threading #, which allows your program to run multiple operations concurrently within a single process.
-import time
 
 app = Flask(__name__, template_folder='templates')
 
-# Global variable to hold our simulation
-sim = None
+sim = rebound.Simulation()
+sim.integrator = "ias15"
 
-def run_rebound_server(x, vy):
- #   global sim
- #   print("Thread started")
+print("Creating REBOUND system...")
 
+sim.add(m=1.0)
+sim.add(m=0.01, a=1.0)
+sim.add(m=0, x=0.8, vy=0.5)
 
-  #  if sim is not None:
-   #     sim.stop_server()
+sim.move_to_com()
 
-    sim = rebound.Simulation()
-    sim.integrator = "ias15"
-    
-    # Standard Restricted Three-Body Setup
-    # Primary (Sun) - Make it huge
-    print("-----------Adding particles-----------")
-    sim.add(m=1.0)
-    #sim.particles["Sun"].color = (1, 0.8, 0) # Use 0-1 scale instead of 0-255
+sim.start_server(port=1234)
+print("🚀 REBOUND running at http://127.0.0.1:1234")
 
-    # Secondary (Planet) - Make it visible
-    sim.add(m=0.01, a=1.0)
-   # sim.particles["Planet"].color = (0, 0.5, 1)
-
-    # Test Particle - Make it distinct
-    sim.add(m=0, x=x, vy=vy)
-    #sim.particles["Particle"].color = (1, 0, 0)
-    
-    sim.move_to_com()
-    print("--------------Starting REBOUND server--------------")
-
-    print("--------------Server is running--------------")
-    sim.start_server(port=1234)
-    print("✅ Server running at http://127.0.0.1:1234")
-    
-    # This starts the visualization server on port 1234
-    # 'pause=False' ensures it starts moving immediately
-    #sim.start_server(port=1234) 
-    
-    # Keep the simulation running
-    #while True:
-   #     sim.integrate(sim.t + 0.05)
-
-        # If the particle is 100 units away, it's 'ejected' - stop the loop
-       # if sim.particles[2].x > 100 or sim.particles[2].y > 100:
-       #     print("Particle ejected! Stopping.")
-      #      break
-
-    def check_ejection(sim):
-        p = sim.particles[2]
-        if abs(p.x) > 100 or abs(p.y) > 100:
-            print("Particle ejected!")
-            sim.stop()
-
-    sim.heartbeat = check_ejection
-    
-
-    # ✅ KEEP THREAD ALIVE (CRITICAL)
-    while True:
-        time.sleep(1)
 
 @app.route('/')
 def index():
@@ -72,16 +24,16 @@ def index():
 
 @app.route('/update_sim', methods=['POST'])
 def update_sim():
-    print("🔥 /update_sim HIT")
     data = request.json
     x = float(data.get('x'))
     vy = float(data.get('vy'))
-    
-    # Start the simulation in a background thread so it doesn't freeze the website
-    thread = threading.Thread(target=run_rebound_server, args=(x, vy), daemon=True)
-    thread.start()
-    
-    return {"status": "started"}
+
+    print("Updating particle")
+
+    sim.particles[2].x = x
+    sim.particles[2].vy = vy
+
+    return {"status": "updated"}
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=5001, debug=True, use_reloader=False)

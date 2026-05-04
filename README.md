@@ -10,6 +10,12 @@ Challenge:
 - Backend was working correctly but the frontend simulation would not update. fix: let REBOUND control the whole simulation by not using a while loop and don't call integrate() manually. Flask is only used to input parameters.
 
 
+Rules:
+
+- Dont create simulation inside Flask.
+- Start server once
+- Flask only updates values
+
 Notes: 
 I ran the following command: 
 ```
