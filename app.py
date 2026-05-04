@@ -41,8 +41,6 @@ def heartbeat(sim_ptr):
         print("Ejection detected")
         ejected = True
 
-
-
 # -------------------------
 # START SERVER (ONLY ONCE)
 # -------------------------
