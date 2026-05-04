@@ -72,9 +72,25 @@
       button:hover {
         background: #0099ff;
       }
+      #banner {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff3b3b;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  display: none;
+  z-index: 9999999; 
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
     </style>
   </head>
   <body>
+  <div id="banner">Particle Ejected</div>
+
     <div id="sidebar">
       <h2>REBOUND Sim</h2>
       <p>Adjust initial conditions for the restricted test particle.</p>
@@ -97,6 +113,22 @@
     </div>
 
     <script>
+      let lastState = false;
+
+setInterval(() => {
+  fetch("/status")
+    .then(res => res.json())
+    .then(data => {
+
+      if (data.ejected && !lastState) {
+        // 👇 THIS acts like a Python-triggered event
+        SimEvents.dispatchEvent(new Event("ejection"));
+      }
+
+      lastState = data.ejected;
+    });
+}, 300);
+
       function startSim() {
         // Get user inputs
         const x = document.getElementById("x").value;
@@ -119,6 +151,11 @@
           }, 1000);
         });
       }
+
+      // Listen for ejection events from the server
+SimEvents.addEventListener("ejection", () => {
+  pushBanner("🚨 Particle Ejected");
+});
     </script>
   </body>
 </html>
